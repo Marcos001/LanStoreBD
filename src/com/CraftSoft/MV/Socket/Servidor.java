@@ -15,6 +15,9 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.CraftSoft.MV.DATABASE.*;
+
+
 public class Servidor extends JPanel {
 
     /**------------------------- Variáveis ----------------------*/
@@ -33,6 +36,16 @@ public class Servidor extends JPanel {
 
 
 
+    /**-----------INSTACIA PARA O BANCO DE DADOS MYSQL-----------------*/
+    DataBase db;
+    /**-----------------------------------------------------------------*/
+
+
+    private void print(String m){
+        System.out.println(m);
+    }
+
+
     /**------------------------ Funcoes -----------------------*/
     // set up GUI
     public Servidor()
@@ -43,7 +56,7 @@ public class Servidor extends JPanel {
         enterField.addActionListener(
                 new ActionListener()
                 {
-                    // send message to client
+                    // send message to client -  press enter
                     public void actionPerformed( ActionEvent event )
                     {
                         sendData( event.getActionCommand() );
@@ -106,6 +119,8 @@ public class Servidor extends JPanel {
 
 
 
+
+
     // wait for connection to arrive, then display connection info
     private void waitForConnection() throws IOException
     {
@@ -114,6 +129,9 @@ public class Servidor extends JPanel {
         displayMessage( "Connection " + counter + " received from: " +
                 connection.getInetAddress().getHostName() );
     } // end method waitForConnection
+
+
+
 
     // get streams to send and receive data
     private void getStreams() throws IOException
@@ -146,6 +164,11 @@ public class Servidor extends JPanel {
             try // read message and display it
             {
                 message = ( String ) input.readObject(); // read new message
+
+                print("Menssagem recebida do cliente menssage = " + message);
+
+                db = new DataBase(message);
+
                 displayMessage( "\n" + message ); // display message
             } // end try
             catch ( ClassNotFoundException classNotFoundException )
